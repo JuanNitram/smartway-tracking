@@ -1,0 +1,9 @@
+header {
+  height: 6vh;
+  z-index: 998;
+  position: relative;
+}
+
+.map-section {
+  margin-top: 2vh;
+}

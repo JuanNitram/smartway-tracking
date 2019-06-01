@@ -1,0 +1,18 @@
+<mat-toolbar color="primary" class="navbar mat-elevation-z8">
+  <div class="left">SMARTWAY</div>
+  <div class="right">
+    <mat-form-field color="white">
+      <input matInput placeholder="Vehicle" [(ngModel)]="params.vehicles">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="datetime-local" placeholder="Date From" [(ngModel)]="params.datetime_from">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="datetime-local" placeholder="Date To" [(ngModel)]="params.datetime_to">
+    </mat-form-field>
+
+    <button mat-button (click)="submit()" class="submit-button">Go</button>
+  </div>
+</mat-toolbar>

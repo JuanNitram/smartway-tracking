@@ -1,0 +1,71 @@
+mat-form-field.mat-form-field {
+  font-size: 15px;
+  padding: 10px;
+}
+
+@media (max-width: 992px) {
+  mat-form-field.mat-form-field {
+    font-size: 13px;
+    width: 25vh
+  }
+}
+
+@media (max-width: 768px) {
+  mat-form-field.mat-form-field {
+    font-size: 11px;
+    width: 16vh
+  }
+}
+
+@media (max-width: 576px) {
+  mat-form-field.mat-form-field {
+    font-size: 12px;
+    width: 18vh
+  }
+
+  .navbar .left{
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 540px) {
+  mat-form-field.mat-form-field {
+    font-size: 12px;
+    width: 18vh
+  }
+
+  .navbar .left{
+    display: none;
+  }
+
+  .navbar {
+    justify-content: center!important;
+  }
+}
+
+@media (max-width: 375px) {
+  mat-form-field.mat-form-field {
+    font-size: 8px;
+    width: 8vh
+  }
+
+  .navbar .left{
+    display: none;
+  }
+
+  .navbar {
+    justify-content: center!important;
+  }
+}
+
+.submit-button {
+  min-width: 10px;
+}
+
+.navbar {
+  justify-content: space-between;
+}
+
+.navbar .right{
+  margin-top: 12px;
+}

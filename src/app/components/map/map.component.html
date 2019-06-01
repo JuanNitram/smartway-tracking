@@ -1,0 +1,22 @@
+<div *ngIf="!isLoading && !fetchErrors">
+  <agm-map [latitude]="initialPosition.latitude" [longitude]="initialPosition.longitude" [zoom]="zoom">
+    <agm-marker  [latitude]="position.position.latitude" [longitude]="position.position.longitude" *ngFor="let position of positions; let i= index">
+      <agm-info-window [disableAutoPan]="true">
+        Speed: <strong>{{ detailsPositions[i].speed }} Km/h</strong>
+      </agm-info-window>
+    </agm-marker>
+    <agm-polyline [visible]="true" [strokeWeight]="3">
+      <agm-polyline-point *ngFor="let position of positions" [latitude]="position.position.latitude" [longitude]="position.position.longitude"></agm-polyline-point>
+    </agm-polyline>
+  </agm-map>
+</div>
+
+<div class="error-message" *ngIf="!isLoading && fetchErrors">
+  <h3>No se han conseguido datos!</h3>
+</div>
+
+<div *ngIf="isLoading">
+  <div class="preloader">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
