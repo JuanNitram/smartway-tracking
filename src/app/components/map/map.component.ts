@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { query } from '@angular/core/src/render3/query';
+import { ApiService } from '../../services/api.service'
 
 @Component({
   selector: 'map',
@@ -14,6 +15,7 @@ export class MapComponent implements OnInit {
   zoom: number = 10;
 
   initialPosition
+  pos
   positions = []
   detailsPositions = []
   fetchErrors = false
@@ -26,11 +28,38 @@ export class MapComponent implements OnInit {
   authorization = 'Bearer IC5n6ZKd78ZZ79oxtweaZaUugV5u22'
   isLoading = false;
 
-  constructor() { }
+  constructor(private _apiService: ApiService) { }
 
   // Consumimos de los endpoints datos de posiciones y luego la velocidad en cada posicion
   ngOnInit(){
-    this.fetchData()
+    this.getPositions()
+  }
+
+  getPositions() {
+    this.isLoading = true
+    this.fetchErrors = false
+    this._apiService.getPositions(this.getQuery(this.params)).subscribe(
+      data => {
+        this.positions = data.tracking[0].data
+        this.initialPosition = this.positions[0].position;
+        this._apiService.getPositionsDetails(this.getQuery(Object.assign(this.params, {variable_name: 'speed'}))).subscribe(
+          data => {
+            this.detailsPositions = data.tracking[0].data
+            this.isLoading = false
+          },
+          err => {
+            console.error(err)
+            this.isLoading = false
+            this.fetchErrors = true
+          }
+        );
+      },
+      err => {
+        console.error(err)
+        this.isLoading = false
+        this.fetchErrors = true
+      }
+    );
   }
 
   // Devuelve string formado por las parejas clave-valor del objeto params
@@ -52,46 +81,44 @@ export class MapComponent implements OnInit {
   ngOnChanges(event){
     if(Object.keys(event.newParams.currentValue).length > 0){
       this.params = event.newParams.currentValue
-      this.fetchData()
+      this.getPositions()
     }
   }
 
 
-  fetchData(){
-    this.isLoading = true
-    this.fetchErrors = false
-    fetch(this.endpoint + this.getQuery(this.params), {
-      method: 'get',
-      headers: new Headers({
-        'Authorization': this.authorization,
-      }),
-    }).then((res) => {
-      return res.json() // res es un Promise, por lo tanto debemos capturar el resutlado en el siguiente then
-    }).then((res) => {
-      this.positions = res.tracking[0].data
-      this.initialPosition = this.positions[0].position;
-      console.log(this.initialPosition)
-      fetch(this.endpoint + this.getQuery(Object.assign(this.params, {variable_name: 'speed'})), {
-        method: 'get',
-        headers: new Headers({
-          'Authorization': this.authorization,
-        }),
-      }).then((res) => {
-        return res.json() // res es un Promise, por lo tanto debemos capturar el resutlado en el siguiente then
-      }).then((res) => {
-        this.detailsPositions = res.tracking[0].data
-        console.log(this.detailsPositions)
-        this.isLoading = false
-      }).catch((error) => {
-        console.log('An error was ocurred!')
-        this.isLoading = false
-        this.fetchErrors = true // Capturamos cualquier error, asi podemos informarle al usuario desde el template
-      })
-    }).catch((error) => {
-      console.log('An error was ocurred!')
-      this.isLoading = false
-      this.fetchErrors = true // Capturamos cualquier error, asi podemos informarle al usuario desde el template
-    })
-  }
+  // fetchData(){
+  //   this.isLoading = true
+  //   this.fetchErrors = false
+  //   fetch(this.endpoint + this.getQuery(this.params), {
+  //     method: 'get',
+  //     headers: new Headers({
+  //       'Authorization': this.authorization,
+  //     }),
+  //   }).then((res) => {
+  //     return res.json() // res es un Promise, por lo tanto debemos capturar el resutlado en el siguiente then
+  //   }).then((res) => {
+  //     this.positions = res.tracking[0].data
+  //     this.initialPosition = this.positions[0].position;
+  //     fetch(this.endpoint + this.getQuery(Object.assign(this.params, {variable_name: 'speed'})), {
+  //       method: 'get',
+  //       headers: new Headers({
+  //         'Authorization': this.authorization,
+  //       }),
+  //     }).then((res) => {
+  //       return res.json() // res es un Promise, por lo tanto debemos capturar el resutlado en el siguiente then
+  //     }).then((res) => {
+  //       this.detailsPositions = res.tracking[0].data
+  //       this.isLoading = false
+  //     }).catch((error) => {
+  //       console.log('An error was ocurred!')
+  //       this.isLoading = false
+  //       this.fetchErrors = true // Capturamos cualquier error, asi podemos informarle al usuario desde el template
+  //     })
+  //   }).catch((error) => {
+  //     console.log('An error was ocurred!')
+  //     this.isLoading = false
+  //     this.fetchErrors = true // Capturamos cualquier error, asi podemos informarle al usuario desde el template
+  //   })
+  // }
 
 }
